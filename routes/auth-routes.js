@@ -16,6 +16,7 @@ const {
   getSearchedPost,
   getPopular,
 } = require("../controllers/post-controller");
+
 const {
   createCategory,
   createSubcategory,
@@ -35,7 +36,7 @@ const { createDirectory, getAllDirectories } = require("../controllers/directory
 router.post("/login", login);
 router.post("/register", register);
 router.post("/createPost", protect, createPost);
-router.post("/createCategory", protect, createCategory);
+router.post("/createCategory", createCategory);
 router.post("/createSubcategory", protect, createSubcategory);
 router.post("/createComment", protect, createComment);
 router.post("/blog/create", createBlog);
@@ -57,7 +58,7 @@ router.get("/directory", getAllDirectories);
 
 router.put("/vote", protect, vote);
 router.put("/commentVote", protect, commentVote);
-
 router.put("/savePost", protect, savePost);
+// router.put("/users/:userId", editUser)
 
 module.exports = router;

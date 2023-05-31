@@ -1,15 +1,13 @@
 const UserModel = require("../models/UserModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const express = require("express");
-
-const app = express();
 
 exports.register = async (req, res) => {
   const { username, password } = req.body;
   try {
     const user = await new UserModel({
       username,
+      // email,
       password,
     });
     user.password = await bcrypt.hash(user.password, 10);
@@ -24,6 +22,7 @@ exports.register = async (req, res) => {
     res.status(500).json({ message: "Algo va mal" });
   }
 };
+
 exports.login = async (req, res) => {
   const { username, password } = req.body;
   try {
@@ -46,3 +45,20 @@ exports.login = async (req, res) => {
     res.status(404).json({ success: false, error: "Nombre de usuario erróneo." });
   }
 };
+
+// exports.editUser = async (req, res) => {
+//   const { userId } = req.params;
+//   const { email, username } = req.body;
+
+//   try {
+//     const user = await UserModel.findByIdAndUpdate(
+//       userId,
+//       { email, username },
+//       { new: true }
+//     );
+
+//     res.status(200).json({ success: true, user });
+//   } catch (error) {
+//     res.status(500).json({ message: "Error al editar el usuario." });
+//   }
+// };

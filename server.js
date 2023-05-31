@@ -13,7 +13,7 @@ app.use(router);
 
 const uri = mongoose
   .connect("mongodb://mongo:FXeqSCKeBcblQ4dbkUuP@containers-us-west-26.railway.app:6778")
-  .then(() => console.log("Base de datos conectada."));
+  .then(() => console.log("db started"));
 
 app.listen(8000, () => {
   console.log("server started on port 8000");
