@@ -8,6 +8,10 @@ const BlogSchema = mongoose.Schema({
     body: {
         type: String,
         required: true
+    },
+    fuente: {
+        type: String,
+        required: true
     }
 })
 

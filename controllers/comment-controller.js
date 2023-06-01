@@ -49,6 +49,7 @@ exports.createComment = async (req, res) => {
       .json({ error: error.message, message: "Algo va mal." });
   }
 };
+
 exports.getComments = async (req, res) => {
   const { postId } = req.params;
   try {

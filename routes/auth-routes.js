@@ -1,37 +1,14 @@
 const express = require("express");
+const router = express.Router();
+
 const { protect } = require("../middleware/auth-middleware");
 
-const router = express.Router();
-const { register, login } = require("../controllers/auth-controller");
-const {
-  createPost,
-  getAllPosts,
-  vote,
-  savePost,
-  getUser,
-  getOnePost,
-  getOneSubCategory,
-  getSavedPosts,
-  getSubmittedPosts,
-  getSearchedPost,
-  getPopular,
-} = require("../controllers/post-controller");
-
-const {
-  createCategory,
-  createSubcategory,
-  getAllCategories,
-  getAllSubcategories,
-} = require("../controllers/category-controller");
-
-const {
-  createComment,
-  getComments,
-  commentVote,
-} = require("../controllers/comment-controller");
-
-const { createBlog, getAllBlogs } = require("../controllers/blog-controller");
+const { createPost, getAllPosts, vote, savePost, getUser, getOnePost, getOneSubCategory, getSavedPosts, getSubmittedPosts, getSearchedPost } = require("../controllers/post-controller");
+const { createCategory, createSubcategory, getAllCategories, getAllSubcategories } = require("../controllers/category-controller");
+const { createComment, getComments, commentVote } = require("../controllers/comment-controller");
 const { createDirectory, getAllDirectories } = require("../controllers/directory-controller");
+const { createBlog, getAllBlogs } = require("../controllers/blog-controller");
+const { register, login, editAccount } = require('../controllers/auth-controller')
 
 router.post("/login", login);
 router.post("/register", register);
@@ -59,6 +36,6 @@ router.get("/directory", getAllDirectories);
 router.put("/vote", protect, vote);
 router.put("/commentVote", protect, commentVote);
 router.put("/savePost", protect, savePost);
-// router.put("/users/:userId", editUser)
+router.put("/editAccount", protect, editAccount)
 
 module.exports = router;

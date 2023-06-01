@@ -1,25 +1,33 @@
-const UserModel = require("../models/UserModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
+const UserModel = require("../models/UserModel");
+
 exports.register = async (req, res) => {
-  const { username, password } = req.body;
+  const { username, firstName, lastName, email, password } = req.body;
+
   try {
     const user = await new UserModel({
       username,
-      // email,
+      firstName,
+      lastName,
+      email,
       password,
     });
+
     user.password = await bcrypt.hash(user.password, 10);
+
     await user.save();
     const token = jwt.sign({ id: user._id }, "123");
 
+    console.log("Usuario creado.")
     res.status(201).json({ success: true, token: token, user: user });
+
   } catch (error) {
     if (error.code === 11000) {
       return res.status(400).json({ message: "El usuario ya existe." });
     }
-    res.status(500).json({ message: "Algo va mal" });
+    res.status(500).json({ message: "Algo va mal", error: error.message });
   }
 };
 
@@ -38,27 +46,36 @@ exports.login = async (req, res) => {
       success: true,
       isMatch,
       token: token,
-      username: username,
+      username: user.username,
       userId: user._id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
     });
-  } catch {
-    res.status(404).json({ success: false, error: "Nombre de usuario erróneo." });
+  } catch (error) {
+    res.status(404).json({ success: false, error: error.message });
   }
 };
 
-// exports.editUser = async (req, res) => {
-//   const { userId } = req.params;
-//   const { email, username } = req.body;
+exports.editAccount = async (req, res) => {
+  const { username, firstName, lastName, email } = req.body;
 
-//   try {
-//     const user = await UserModel.findByIdAndUpdate(
-//       userId,
-//       { email, username },
-//       { new: true }
-//     );
+  try {
+    const user = await UserModel.findById(req.user.id);
 
-//     res.status(200).json({ success: true, user });
-//   } catch (error) {
-//     res.status(500).json({ message: "Error al editar el usuario." });
-//   }
-// };
+    if (!user) {
+      return res.status(404).json({ success: false, error: "Usuario no encontrado." });
+    }
+
+    user.username = username || user.username;
+    user.firstName = firstName || user.firstName;
+    user.lastName = lastName || user.lastName;
+    user.email = email || user.email;
+
+    await user.save();
+
+    res.status(200).json({ success: true, user: user });
+  } catch (error) {
+    res.status(500).json({ message: "Algo va mal", error: error.message });
+  }
+};
